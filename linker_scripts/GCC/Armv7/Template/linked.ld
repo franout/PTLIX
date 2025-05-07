@@ -32,5 +32,39 @@ SECTIONS
   . = 0x8000000;
   .data : { *(.data) }
   .bss : { *(.bss) }
-}
 
+
+  .stl_bootime : {
+    *(.stl_bootime_code)
+    *(.stl_bootime_data)
+  } > FLASH
+
+#if defined(STL_RELOCATION)
+  .stl_runtime : {
+    *(.stl_runtime_code)
+    *(.stl_runtime_data)
+  } > RAM AT > FLASH
+#else
+  .stl_runtime : {
+    *(.stl_runtime_code)
+    *(.stl_runtime_data)
+  } > FLASH
+#endf /*STL_RELOCATION*/
+
+  .stl_test_header : {
+    *(.stl_test_header_section)
+  } > FLASH
+
+  .stl_signature : {
+    *(.stl_signature_section)
+  } > RAM
+
+  .stl_exception_table : {
+    *(.stl_exception_table)
+  } > FLASH
+
+  .stl_exception_handlers : {
+    *(.stl_exception_handlers)
+  } > FLASH 
+
+}
