@@ -10,40 +10,6 @@
 #include "stl_tssp.h"
 #include "stl_core.h"
 
-
-#if STL_BOOT_TEST
-extern STL_FUNCT_PTR_T SBST_BT [STL_TOT_BT_ROUTINE];
-#endif /*STL_BOOT_TEST*/
-#if STL_RUNTIME_TEST
-extern STL_FUNCT_PTR_T SBST_RT [STL_TOT_RT_ROUTINE];
-#endif /*STL_RUNTIME_TEST*/
-
-void STL_init(STL_ERROR_T *err ){
-	*err=STL_ERROR_NONE;
-	STL_em_init(err);
-	if (*err!=STL_ERROR_NONE)
-	{
-		return ;
-	}
-
-	/*create task for OS*/
-#if STL_OS_PRESENT
-
-#endif /*STL_OS_PRESENT*/
-
-}
-void STL_deinit(STL_ERROR_T *err ){
-
-
-#if STL_OS_PRESENT
-	/*delete task */
-
-#endif /**/
-
-}
-
-
-
 #if STL_RELOCATED
 
 /*they MUST BE IMPLEMENTED IN THE LINKER SCRIPT */
@@ -63,11 +29,36 @@ STL_ADDR_T *stl_ram_data = &__stl_ram_data_start__;
 STL_ADDR_T *stl_ram_code = &__stl_ram_code_start__ ;
 STL_ADDR_T *stl_lib=&_stl_lib;
 
+#if STL_RELOCATION_TABLE
+	// TODO add a table for multiple relocation in case of error
+#endif /*STL_RELOCATION_TABLE*/
 
 #endif /*STL_RELOCATED*/
 
+#if STL_BOOT_TEST
+extern STL_FUNCT_PTR_T SBST_BT [STL_TOT_BT_ROUTINE];
+#endif /*STL_BOOT_TEST*/
+#if STL_RUNTIME_TEST
+extern STL_FUNCT_PTR_T SBST_RT [STL_TOT_RT_ROUTINE];
+#endif /*STL_RUNTIME_TEST*/
 
+void STL_init(STL_ERROR_T *err ){
+	*err=STL_ERROR_NONE;
+	STL_em_init(err);
+	if (*err!=STL_ERROR_NONE)
+	{
+		return ;
+	}
 
+}
+void STL_deinit(STL_ERROR_T *err ){
+
+#if STL_OS_PRESENT
+	/*delete task */
+	STL_al_OS_task_delete(err);
+#endif /**/
+
+}
 
 
 void STL_relocate_runtime_tests(STL_ERROR_T * err){
@@ -75,7 +66,7 @@ void STL_relocate_runtime_tests(STL_ERROR_T * err){
 
 	*err=STL_ERROR_NONE;
 #if STL_RELOCATION_TABLE
-	// tood add a table for multiple relocation in case of error
+	// TODO add a table handling for multiple relocation in case of error
 #else
 	STL_ADDR_T *  code_start = (STL_ADDR_T *) &__stl_ram_code_start__;
 	STL_ADDR_T *  code_end = (STL_ADDR_T *) &__stl_ram_data_end__;
@@ -89,64 +80,6 @@ void STL_relocate_runtime_tests(STL_ERROR_T * err){
 	*err=STL_ERROR_NOT_IMPLEMENTED;
 #endif /*STL_RELOCATED*/
 }
-
-
-void STL_schedule_runtime(STL_CPUS cpu,STL_ERROR_T *err){
-	static STL_SIZE_T index=0;
-	STL_SIZE_T i;
-	STL_SIGNATURE_T signature;
-	*err=STL_ERROR_NONE;
-#if STL_RUNTIME_TEST==0
-	*err=SLT_NO_RT_ROUTINE;
-	return;
-#else
-	for(i=index;i<STL_RT_CHUNK && index<STL_TOT_RT_ROUTINE;i++){
-		signature=SBST_RT[i]();
-		STL_em_update_sig(i,signature,*err);
-		if (*err!=STL_ERROR_NONE){
-#ifndef __INJECTION__
-		return ;
-#else
-		stl_signature_mismatch=1;
-		ERROR_Trap();
-#endif /*__INJECTION__*/
-		}
-	}
-
-	if (index>=STL_TOT_RT_ROUTINE){
-		index=0;
-	}
-
-#endif /*STL_RUNTIME_TEST*/
-
-}
-void STL_schedule_bootime(STL_CPUS cpu,STL_ERROR_T *err){
-	STL_SIZE_T i;
-	STL_SIGNATURE_T signature;
-	*err=STL_ERROR_NONE;
-#if STL_BOOT_TEST==0
-	*err=SLT_NO_BT_ROUTINE;
-	return;
-#else
-
-	STL_hal_CPU_swap_ivor();
-	for(i=0;i<STL_TOT_BT_ROUTINE;i++){
-		signature=SBST_BT[i]();
-		STL_em_update_sig(i,signature,*err);
-
-		if (*err!=STL_ERROR_NONE){
-#ifndef __INJECTION__
-		return ;
-#else
-		stl_signature_mismatch=1;
-		ERROR_Trap();
-#endif /*__INJECTION__*/
-		}
-	}
-	STL_hal_CPU_restore_ivor();
-#endif /*STL_BOOT_TEST*/
-}
-
 
 
 void STL_runtime_OS_task_create(STL_ERROR_T * err){
