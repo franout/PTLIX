@@ -75,7 +75,7 @@
     #define STL_USE_MPU                         0u /* Use the memory protection unit */
 #endif /*STL_MULTICORE_SOC*/
 
-
+/* CSP related*/
 #define STL_USE_WATCHDOG                        0u /* Use the watchdog for test execution */
 #define STL_USE_FINE_GRAINED_WATCHDOG           0u /* Use the fine grained watchdog for test execution (defined for each test in the STL) */
 #if (STL_USE_WATCHDOG > 0u && STL_USE_FINE_GRAINED_WATCHDOG == 0u)
@@ -83,8 +83,7 @@
     #define STL_WATCHDOG_RESET_VALUE            0u /* Watchdog reset value */
 #endif /*STL_USE_WATCHDOG*/
 
-/* CSP related*/
-#define STL_
+
 /* OS related*/
 #if (STL_OS_PRESENT > 0u)
     #define STL_OS_RT_TASK_STACK_SIZE          0x00000000u /* Stack size for the OS task */
