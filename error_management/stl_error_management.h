@@ -5,7 +5,7 @@
 
 #if STL_ERROR_MANAGEMENT_ENABLED
 /*
- * static internal structure for signature and error colleciton
+ * static internal structure for signature and error collection
  *
  * */
 
