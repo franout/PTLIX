@@ -42,8 +42,13 @@ typedef uint16_t STL_SIZE_T;
 typedef uint32_t SLT_INT32U_T;
 
 typedef uint32_t STL_ADDR_T;
-
-
+/**
+ * @brief STL_CPUS is used to define the CPU number in a multicore system.
+ * It is used to identify the CPU on which the test is running.
+ * It is used in the STL_schedule_runtime and STL_schedule_bootime functions.
+ * It is used to identify the CPU on which the test is running.
+ */
+typedef uint8_t STL_CPUS;
 
 typedef STL_SIGNATURE_T (*STL_FUNCT_PTR_T)(void);
 

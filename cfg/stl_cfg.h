@@ -14,8 +14,14 @@
 /** 
  *   Assembly keyword for Extended assembly.
  */
+#if defined(__GNUC__) || defined(__clang__)
 #define ASM_KEYWORD(x) asm volatile(x) 
-
+#define WEAK_KEYWORD __attribute__((weak))
+#define STATIC_KEYWORD static
+#define INLINE_KEYWORD inline
+#else
+#warning "Compilier keyword not defined. Please check the compiler documentation."
+#endif /*defined(__GNUC__) || defined(__clang__)*/
 /**
  * \defgroup Linker dependent sections.
  * Section definition for library (they must be instantiated in the linker script)
@@ -54,7 +60,7 @@
  *  Note Scheduler type:
  *                       - 0 Sequential SBST scheduler (for runtime tests only)
  *                       - 1 Chunk-based SBST scheduler (for runtime tests only)
- *                       - 2 Not implemented
+ *                       - 2 Custom
 */
 #define STL_SCHEDULER_TYPE                      0u 
 
@@ -124,6 +130,13 @@
 #define STL_ERROR_MANAGEMENT_VERBOSE    0u 
 
 
+/*****************************************************************************************************/
+/****************                    Error Check                                      ****************/
+/****************                                                                     ****************/
+/*****************************************************************************************************/
 
+#if (STL_BOOT_TEST == 0u && STL_RUNTIME_TEST == 0u)
+#error "No tests selected. Please select at least one test type."
+#endif 
 
 #endif /* __STL_CFG_H__ */
