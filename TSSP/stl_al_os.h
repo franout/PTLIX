@@ -15,6 +15,7 @@ extern "C"
     void STL_hal_OS_task_create(void);
     void STL_hal_OS_task_delete(void);
 #endif /*STL_OS_PRESENT*/
+
 #if __cplusplus
 }
 #endif /*__cplusplus*/
