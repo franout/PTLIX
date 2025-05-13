@@ -348,7 +348,7 @@ void STL_schedule_runtime(STL_CPUS cpu, STL_ERROR_T *err)
 
 #if STL_RUNTIME_TEST == 0
 	// If runtime tests are disabled, set error and return
-	*err = SLT_NO_RT_ROUTINE;
+	*err = STL_NO_RT_ROUTINE;
 	return;
 #else
 
@@ -389,7 +389,7 @@ void STL_schedule_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 
 #if (STL_BOOT_TEST == 0u)
 	// If boot-time tests are disabled, set error and return
-	*err = SLT_NO_BT_ROUTINE;
+	*err = STL_NO_BT_ROUTINE;
 	return;
 #else
 

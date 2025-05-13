@@ -21,7 +21,7 @@
  */
 
 /**
- * @def SLT_NULL
+ * @def STL_NULL
  * @brief Macro representing a null pointer value.
  */
 
@@ -64,10 +64,10 @@
  * @var STL_ERROR_T::STL_INDEX_OUT_OF_BOUNDS
  * Index is out of bounds.
  *
- * @var STL_ERROR_T::SLT_NO_RT_ROUTINE
+ * @var STL_ERROR_T::STL_NO_RT_ROUTINE
  * No runtime routine is available.
  *
- * @var STL_ERROR_T::SLT_NO_BT_ROUTINE
+ * @var STL_ERROR_T::STL_NO_BT_ROUTINE
  * No boot-time routine is available.
  *
  * @var STL_ERROR_T::STL_ERROR_CUSTOM_SCHEDULER_NOT_IMPLEMENTED
@@ -85,7 +85,7 @@
  */
 
 /**
- * @typedef SLT_INT32U_T
+ * @typedef STL_INT32U_T
  * @brief Unsigned 32-bit integer type used in STL operations.
  */
 
@@ -115,7 +115,7 @@
 #define STL_FALSE 0u
 
 // Null pointer definition
-#define SLT_NULL 0x00000000UL
+#define STL_NULL 0x00000000UL
 
 // Type for signature values
 typedef int STL_SIGNATURE_T;
@@ -138,8 +138,8 @@ typedef enum
 	STL_CPU_OUT_OF_BOUNDS = 60,	  // CPU index out of bounds
 	STL_INDEX_OUT_OF_BOUNDS = 70, // Index out of bounds
 
-	SLT_NO_RT_ROUTINE = 80, // No runtime routine available
-	SLT_NO_BT_ROUTINE = 90, // No boot-time routine available
+	STL_NO_RT_ROUTINE = 80, // No runtime routine available
+	STL_NO_BT_ROUTINE = 90, // No boot-time routine available
 
 	STL_ERROR_CUSTOM_SCHEDULER_NOT_IMPLEMENTED = 100 // Custom scheduler not implemented
 } STL_ERROR_T;
@@ -151,7 +151,7 @@ typedef char STL_BOOL;
 typedef uint16_t STL_SIZE_T;
 
 // Unsigned 32-bit integer type
-typedef uint32_t SLT_INT32U_T;
+typedef uint32_t STL_INT32U_T;
 
 // Address type
 typedef uint32_t STL_ADDR_T;

@@ -143,7 +143,7 @@
 #define STL_OS_RT_TASK_PRIORITY 0u			  /* Task priority for the OS task */
 #define STL_OS_RT_TASK_PERIOD 0u			  /* Task period for the OS task */
 #define STL_OS_RT_TASK_CRC 0u				  /* Compute CRC for the OS task in charge of executing the STL */
-#endif										  /* SLT_OS_PRESENT */
+#endif										  /* STL_OS_PRESENT */
 
 /*****************************************************************************************************/
 /****************                    Software-Self Tests                              ****************/

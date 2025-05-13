@@ -13,7 +13,7 @@
 
 
 typedef struct {
-	SLT_INT32U_T index;
+	STL_INT32U_T index;
 	STL_SIGNATURE_T signature;
 }STL_FAILED_TEST_T;
 
