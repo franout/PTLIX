@@ -70,7 +70,7 @@
 #define STATIC_KEYWORD static
 #define INLINE_KEYWORD inline
 #else
-#warning "Compilier keyword not defined. Please check the compiler documentation."
+#warning "Compiler keyword not defined. Please check the compiler documentation."
 #endif /*defined(__GNUC__) || defined(__clang__)*/
 /**
  * \defgroup Linker dependent sections.
