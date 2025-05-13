@@ -31,7 +31,7 @@ extern "C"
 {
 #endif /*__cplusplus*/
 
-#if (STL_BOOT_TEST == 0u)
+#if (STL_BOOT_TEST > 0u)
 	/**
 	 * @brief This function is used to schedule the bootime tests
 	 * It is called by the main function to execute the bootime tests, sequentially.
@@ -43,7 +43,7 @@ extern "C"
 	 */
 	void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err);
 #endif /*STL_BOOT_TEST*/
-#if (STL_RUNTIME_TEST == 0u)
+#if (STL_RUNTIME_TEST > 0u)
 	/**
 	 * @brief This function is used to schedule the runtime tests
 	 * It is called by the main function to execute the runtime tests, sequentially.
