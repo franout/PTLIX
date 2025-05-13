@@ -1,6 +1,6 @@
-- [ ] add scheduler skeleton 
+- [x] add scheduler skeleton 
 - [ ] add tssp skeleton 
-- [ ] add compilation
+- [x] add compilation
 - [ ] general check 
 - [ ] add tests
 - [ ] add examples and readme
