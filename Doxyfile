@@ -31,7 +31,7 @@ PROJECT_VERSION = 1.0.0
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "OpenDCDiag"
+PROJECT_NAME           = "PTLIX"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          =
 PROJECT_LOGO           =

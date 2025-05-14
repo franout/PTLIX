@@ -1,62 +1,61 @@
-
-DOXYGEN ?= doxygen 
+DOXYGEN ?= doxygen
 CC ?= gcc
 CXX ?= g++
 
-
-# target macros
+# Target macros
 TARGET := ptlix_compliant_stl
-MAIN_SRC := test.c
 
-# compile macros
-DIRS := src # FILL: only the dirs which contain the src files, in this case, `src` should be added
-OBJS := # FILL: only the objects in current dir, and do not include the one contains `main()`
+# Compile macros
+DIRS := src
+OBJS := $(patsubst %.c,%.o,$(call rwildcard,$(DIRS),*.c)) # Automatically find all .c files in src and convert to .o
 
-# intermedia compile macros
-# NOTE: ALL_OBJS are intentionally left blank, no need to fill it
-ALL_OBJS := 
+# Intermediate compile macros
+ALL_OBJS := $(OBJS)
 CLEAN_FILES := $(TARGET) $(OBJS)
-DIST_CLEAN_FILES := $(OB JS)
+DIST_CLEAN_FILES := $(CLEAN_FILES)
 
-# recursive wildcard
-rwildcard=$(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$(2))$(filter $(subst *,%,$(2)),$(d)))
+# Recursive wildcard
+rwildcard=$(foreach d,$(wildcard $(addsuffix /,$(1))),$(call rwildcard,$(d),$(2)) $(filter $(subst *,%,$(2)),$(d)))
 
-# default target
+# Default target
 default: all
 
-# non-phony targets
-$(TARGET):  $(OBJS) 
-	@echo -e "\t" CC $(CFLAGS) $(ALL_OBJS) $(MAIN_SRC) -o $@
-	@$(CC) $(CFLAGS) $(ALL_OBJS) $(MAIN_SRC) -o $@
+# Non-phony targets
+$(TARGET): $(OBJS)
+	@echo "Building target: $@"
+	$(CC) $(CFLAGS) $(ALL_OBJS) -o $@
 
-# phony targets
+# Phony targets
 .PHONY: all
 all: $(TARGET)
-	@echo Target $(TARGET) build finished.
+	@echo "Target $(TARGET) build finished."
 
 .PHONY: lib
-lib: all
-	@echo Making lib
-	@echo -e "\t" CC $(CFLAGS) $(ALL_OBJS) $(MAIN_SRC) -o $@
-	@$(CC) $(CFLAGS) $(ALL_OBJS) $(MAIN_SRC) -o $@
+lib: $(OBJS)
+	@echo "Building static library lib$(TARGET).a"
+	ar rcs lib$(TARGET).a $(OBJS)
 
 .PHONY: clean
-clean: clean-subdirs
-	@echo CLEAN $(CLEAN_FILES)
-	@rm -f $(CLEAN_FILES)
+clean:
+	@echo "Cleaning files: $(CLEAN_FILES)"
+	rm -f $(CLEAN_FILES)
 
 .PHONY: distclean
-distclean: clean-subdirs
-	@echo CLEAN $(DIST_CLEAN_FILES)
-	@rm -f $(DIST_CLEAN_FILES)
-
+distclean: clean
+	@echo "Cleaning distribution files: $(DIST_CLEAN_FILES)"
+	rm -f $(DIST_CLEAN_FILES)
 
 .PHONY: docs
-docs: 
-	@echo Building docs
+docs:
+	@echo "Building documentation"
 	$(DOXYGEN)
 
 .PHONY: clean_docs
 clean_docs:
-	@echo Cleaning docs
+	@echo "Cleaning documentation"
 	rm -rf ./docs
+
+.PHONY: format
+format: .clang-format
+	@echo "Formatting source files using .clang-format"
+	clang-format -i --style=file $(call rwildcard,$(DIRS),*.c) $(call rwildcard,$(DIRS),*.h)
