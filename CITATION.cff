@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+title: PTLIX
+abstract: A Portable Test Library Interface.
+authors:
+  - family-names: Angione, Bernardi, Cantoro
+    given-names: Francesco, Paolo, Riccardo
+    orcid: "https://orcid.org/0000-0003-2978-1130"
+  - name: "CAD & Reliability Group"
+version: 1.0.0
+date-released: "2025-05-22"
+license: Apache-2.0
+repository-code: "https://github.com/franout/PTLIX"
