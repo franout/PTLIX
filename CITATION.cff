@@ -3,9 +3,13 @@ message: If you use this software, please cite it using these metadata.
 title: PTLIX
 abstract: A Portable Test Library Interface.
 authors:
-  - family-names: Angione, Bernardi, Cantoro
-    given-names: Francesco, Paolo, Riccardo
+  - family-names: Angione
+    given-names: Francesco
     orcid: "https://orcid.org/0000-0003-2978-1130"
+  - family-names: Bernardi
+    given-names: Paolo
+  - family-names: Cantoro
+    given-names: Riccardo
   - name: "CAD & Reliability Group"
 version: 1.0.0
 date-released: "2025-05-22"
