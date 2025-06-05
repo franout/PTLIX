@@ -360,7 +360,7 @@ STL_SIGNATURE_T STL_em_rt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERRO
 		return 0;
 	}
 #endif /*STL_MULTICORE_EXECUTION*/
-	if (index < 0 || index > STL_TOT_RT_ROUTINE)
+	if (index < 0 || index >= STL_TOT_RT_ROUTINE)
 	{
 		*err = STL_INDEX_OUT_OF_BOUNDS;
 		return 0;
