@@ -354,7 +354,7 @@ void STL_em_failed_bootime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_
 STL_SIGNATURE_T STL_em_rt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERROR_T *err)
 {
 #if STL_MULTICORE_EXECUTION
-	if (cpu < 0 || cpu > STL_NUM_CPU)
+	if (cpu < 0 || cpu >= STL_NUM_CPU)
 	{
 		*err = STL_CPU_OUT_OF_BOUNDS;
 		return 0;
