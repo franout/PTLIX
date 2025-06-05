@@ -1,10 +1,11 @@
 - [x] add scheduler skeleton 
-- [ ] add tssp skeleton 
-- [x] add compilation
-- [ ] general check 
+- [x] add tssp skeleton 
+- [ ] add compilation
+- [x] general check error management 
+- [ ] check linker scripts
+- [ ] check source
+- [ ] check utils
+- [ ] check api
 - [ ] add tests
 - [ ] add examples and readme
 - [ ] add doc
-
-
-

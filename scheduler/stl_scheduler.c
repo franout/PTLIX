@@ -51,6 +51,7 @@
 #ifndef __STL_SCHEDULER__MODULE__
 #define __STL_SCHEDULER__MODULE__
 #include "stl_scheduler.h"
+#include "stl_tssp.h"
 #include "stl_cfg.h"
 #include "stl_types.h"
 
@@ -70,9 +71,9 @@ STATIC_KEYWORD void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 	STL_SIGNATURE_T signature;
 
 #if (STL_MULTICORE_SOC == 1u)
-	STL_hal_CPU_swap_ivor(cpu);
+	STL_TSSP_CPU_swap_ivor(cpu);
 #else
-	STL_hal_CPU_swap_ivor();
+	STL_TSSP_CPU_swap_ivor();
 #endif
 
 	for (i = 0; i < STL_TOT_BT_ROUTINE; i++)
@@ -86,9 +87,9 @@ STATIC_KEYWORD void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 		if (*err != STL_ERROR_NONE)
 		{
 #if (STL_MULTICORE_SOC == 1u)
-			STL_hal_CPU_restore_ivor(cpu);
+			STL_TSSP_CPU_restore_ivor(cpu);
 #else
-			STL_hal_CPU_restore_ivor();
+			STL_TSSP_CPU_restore_ivor();
 #endif
 			return;
 		}
@@ -113,18 +114,18 @@ STATIC_KEYWORD void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 		if (*err != STL_ERROR_NONE)
 		{
 #if (STL_MULTICORE_SOC == 1u)
-			STL_hal_CPU_restore_ivor(cpu);
+			STL_TSSP_CPU_restore_ivor(cpu);
 #else
-			STL_hal_CPU_restore_ivor();
+			STL_TSSP_CPU_restore_ivor();
 #endif
 			return;
 		}
 	}
 
 #if (STL_MULTICORE_SOC == 1u)
-	STL_hal_CPU_restore_ivor(cpu);
+	STL_TSSP_CPU_restore_ivor(cpu);
 #else
-	STL_hal_CPU_restore_ivor();
+	STL_TSSP_CPU_restore_ivor();
 #endif
 }
 #endif /* STL_BOOT_TEST */
