@@ -124,7 +124,6 @@
 /* CPU related*/
 #if (STL_MULTICORE_SOC > 0u)
 #define STL_MULTICORE_EXECUTION 0u
-#define STL_NUM_CPU 2u
 #define STL_USE_MPU 0u /* Use the memory protection unit */
 #endif				   /*STL_MULTICORE_SOC*/
 

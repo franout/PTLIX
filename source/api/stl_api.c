@@ -71,7 +71,7 @@ void STL_relocate_runtime_tests(STL_ERROR_T * err){
 	STL_ADDR_T *  code_start = (STL_ADDR_T *) &__stl_ram_code_start__;
 	STL_ADDR_T *  code_end = (STL_ADDR_T *) &__stl_ram_data_end__;
 	STL_INT32U_T size=code_end-code_start;
-	STL_hal_CPU_relocate(stl_src,code_start,size ,err);
+	STL_TSSP_CPU_relocate(stl_src,code_start,size ,err);
 	if (*err!=STL_ERROR_NONE){
 		return ;
 	}

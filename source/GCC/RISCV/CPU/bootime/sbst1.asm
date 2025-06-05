@@ -95,7 +95,7 @@ RISCV_ABI_PROLOGUE // this could be a macro
 SBST_ALIGNMENT // this could be a macro 
 .section STL_RODATA 
 TEST_ID_SBST1:          .dword 0x1
-GOLDEN_SIGNATURE: .dword 0xcafecafe
+GOLDEN_SIGNATURE:       .dword 0xcafecafe
 
 .section STL_DATA // the section name can be defined into an header file 
 SIGN: .dword 0
