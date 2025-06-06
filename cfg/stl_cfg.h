@@ -69,6 +69,7 @@
 #define WEAK_KEYWORD __attribute__((weak))
 #define STATIC_KEYWORD static
 #define INLINE_KEYWORD inline
+#define EXTERN_KEYWORD extern
 #else
 #warning "Compiler keyword not defined. Please check the compiler documentation."
 #endif /*defined(__GNUC__) || defined(__clang__)*/
