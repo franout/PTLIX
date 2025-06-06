@@ -1,4 +1,5 @@
-#if 1 __STL__
+#if __STL__
+
 #ifndef __STL_H__
 #define __STL_H__
 
@@ -143,6 +144,18 @@ void STL_relocate_runtime_tests(STL_ERROR_T *err);
  * It is used to create a task that will execute the runtime tests in an operating system environment.
  */
 void STL_runtime_OS_task_create(STL_ERROR_T *err);
+
+/**
+ * @brief Deletes the OS task for the STL runtime tests.
+ * This function deletes the task in the operating system that was created for executing the STL runtime tests.
+ * It is used to clean up the task when it is no longer needed, typically at the end of the testing process.
+ * @param err Pointer to an STL_ERROR_T variable to store any error that occurs during task deletion.
+ * @return void
+ * @note This function is part of the STL OS integration.
+ * It is used to remove the task that was created for executing the runtime tests in an operating system environment.
+ * It should be called when the tests are complete or when the system is shutting down.
+ */
+void STL_runtime_OS_task_delete(STL_ERROR_T *err);
 #endif /*__STL_IN_OS__*/
 
 #if STL_ERROR_MANAGEMENT_ENABLED
