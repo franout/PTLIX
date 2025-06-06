@@ -137,6 +137,59 @@ void STL_em_init(STL_ERROR_T *err)
 }
 
 /**
+ * @brief Deinitializes the error management system.
+ * This function resets the error management data structures and clears
+ * the last failed test information. It is called at the end of the program
+ * to clean up resources used by the error management system.
+ * @param err Pointer to an STL_ERROR_T variable where the error status will be updated.
+ * 		  It is set to STL_ERROR_NONE if no errors occur.
+ * @return void
+ * @note This function should be called after all tests have been executed
+ * and before the program terminates.
+ * It ensures that all error management data structures are reset to their initial state.
+ */
+void STL_em_deinit(STL_ERROR_T *err)
+{
+	*err = STL_ERROR_NONE;
+#if STL_ERROR_MANAGEMENT_ENABLED
+	STL_SIZE_T i, j;
+#if STL_MULTICORE_EXECUTION
+	for (j = 0; j < STL_NUM_CPU; j++)
+	{
+		/* Reset the last failed test information for each CPU */
+		memset(&last_failed[j], 0, sizeof(STL_FAILED_TEST_T));
+		/* Clear boot-time test signatures */
+		for (i = 0; i < STL_BOOTTIME_ROUTINES; i++)
+		{
+			em_bt_sign[j][i].sig = 0;
+			em_bt_sign[j][i].mismatch = STL_FALSE;
+		}
+		/* Clear runtime test signatures */
+		for (i = 0; i < STL_RUNTIME_ROUTINES; i++)
+		{
+			em_rt_sign[j][i].sig = 0;
+			em_rt_sign[j][i].mismatch = STL_FALSE;
+		}
+	}
+#else
+	/* Reset single-core last failed test information */
+	memset(&last_failed, 0, sizeof(STL_FAILED_TEST_T));
+	/* Clear boot-time test signatures */
+	for (i = 0; i < STL_TOT_BT_ROUTINE; i++)
+	{
+		em_bt_sign[i].sig = 0;
+		em_bt_sign[i].mismatch = STL_FALSE;
+	}
+	/* Clear runtime test signatures */
+	for (i = 0; i < STL_TOT_RT_ROUTINE; i++)
+	{
+		em_rt_sign[i].sig = 0;
+		em_rt_sign[i].mismatch = STL_FALSE;
+	}
+#endif /* STL_MULTICORE_EXECUTION */
+#endif /* STL_ERROR_MANAGEMENT_ENABLED */
+}
+/**
  * @brief Retrieves the last failed test information for a specific CPU.
  *
  * This function retrieves the last failed test information for a given CPU.
@@ -149,6 +202,7 @@ void STL_em_init(STL_ERROR_T *err)
  *             information will be stored.
  * @param err Pointer to an STL_ERROR_T variable where the error status will be updated.
  *            It is set to STL_CPU_OUT_OF_BOUNDS if the CPU identifier is invalid
+ */
 void STL_em_get_last_failed(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_T *err)
 {
 #if STL_MULTICORE_EXECUTION

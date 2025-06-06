@@ -50,6 +50,12 @@ extern "C" {
 void STL_em_init(STL_ERROR_T *err);
 
 /**
+ * @brief Deinitializes the error management system.
+ *
+ * @param err Pointer to the error structure to initialize.
+ */
+void STL_em_deinit(STL_ERROR_T *err);
+/**
  * @brief Handles a runtime failure for a specific CPU.
  *
  * @param cpu The CPU identifier.
