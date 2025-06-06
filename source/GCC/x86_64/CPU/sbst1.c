@@ -1,7 +1,7 @@
 
 #include "stl_types.h"
 
-#define TEST_DATA_LENGHT 32
+#define TEST_DATA_LENGTH 32
 const test_data_patterns[] = {
 
 };
@@ -14,7 +14,7 @@ SIGNATURE_T test_adder(void)
     int i;
     int a, b, c;
     
-    for (i = 0; i < TEST_DATA_LENGHT; i++)
+    for (i = 0; i < TEST_DATA_LENGTH; i++)
     {
         a = test_data_patterns[i];
         b = test_data_patterns[i];
