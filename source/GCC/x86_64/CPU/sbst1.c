@@ -9,6 +9,11 @@ const test_data_patterns[] = {
 SIGNATURE_T test_adder(void)
 {
 
+    /* a very simple test for the integer addition */
+    SIGNATURE_T sig = 0;
+    int i;
+    int a, b, c;
+    
     for (i = 0; i < TEST_DATA_LENGHT; i++)
     {
         a = test_data_patterns[i];
