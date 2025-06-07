@@ -1,5 +1,6 @@
-#if 1 __STL__
-#include "stl_al_csp.h"
+#if __STL__
+
+#include "stl_tssp.h"
 #include "stl_cfg.h"
 #include "stl_types.h"
 

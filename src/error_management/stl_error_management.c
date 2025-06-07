@@ -5,9 +5,13 @@
 
 #if STL_ERROR_MANAGEMENT_ENABLED
 
+#include <string.h>
+
 #include "stl_cfg.h"
+#include "stl_sbst_cfg.h"
 #include "stl_error_management.h"
 #include "stl_types.h"
+#include "stl.h"
 
 /**
  * @file stl_error_management.c
@@ -72,17 +76,17 @@ typedef struct
 } STL_EM_TEST_T;
 
 #if STL_MULTICORE_EXECUTION
-static STL_EM_TEST_T em_bt_sign[STL_NUM_CPU][STL_TOT_BT_ROUTINE];
-static STL_EM_TEST_T em_rt_sign[STL_NUM_CPU][STL_TOT_RT_ROUTINE];
+STATIC_KEYWORD STL_EM_TEST_T em_bt_sign[STL_NUM_CPU][STL_TOT_BT_ROUTINE];
+STATIC_KEYWORD STL_EM_TEST_T em_rt_sign[STL_NUM_CPU][STL_TOT_RT_ROUTINE];
 #else
-static STL_EM_TEST_T em_bt_sign[STL_TOT_BT_ROUTINE];
-static STL_EM_TEST_T em_rt_sign[STL_TOT_RT_ROUTINE];
+STATIC_KEYWORD STL_EM_TEST_T em_bt_sign[STL_TOT_BT_ROUTINE];
+STATIC_KEYWORD STL_EM_TEST_T em_rt_sign[STL_TOT_RT_ROUTINE];
 #endif /*STL_MULTICORE_EXECUTION*/
 
 #if STL_MULTICORE_EXECUTION
-volatile static STL_FAILED_TEST_T last_failed[STL_NUM_CPU];
+STATIC_KEYWORD STL_FAILED_TEST_T last_failed[STL_NUM_CPU];
 #else
-volatile static STL_FAILED_TEST_T last_failed;
+STATIC_KEYWORD STL_FAILED_TEST_T last_failed;
 #endif /*STL_MULTICORE_EXECUTION*/
 
 /**
@@ -100,9 +104,9 @@ void STL_em_init(STL_ERROR_T *err)
 {
 	*err = STL_ERROR_NONE;
 #if STL_ERROR_MANAGEMENT_ENABLED
-	STL_SIZE_T i, j;
-
+	STL_SIZE_T i;
 #if STL_MULTICORE_EXECUTION
+	STL_SIZE_T j;
 	for (j = 0; j < STL_NUM_CPU; j++)
 	{
 		last_failed[j] = {0};
@@ -119,7 +123,8 @@ void STL_em_init(STL_ERROR_T *err)
 		}
 	}
 #else
-	last_failed = {0};
+	last_failed.signature = 0;
+	last_failed.index = 0;
 	for (i = 0; i < STL_TOT_BT_ROUTINE; i++)
 	{
 		em_bt_sign[i].sig = 0;
@@ -152,8 +157,9 @@ void STL_em_deinit(STL_ERROR_T *err)
 {
 	*err = STL_ERROR_NONE;
 #if STL_ERROR_MANAGEMENT_ENABLED
-	STL_SIZE_T i, j;
+	STL_SIZE_T i;
 #if STL_MULTICORE_EXECUTION
+	STL_SIZE_T j;
 	for (j = 0; j < STL_NUM_CPU; j++)
 	{
 		/* Reset the last failed test information for each CPU */
@@ -206,13 +212,14 @@ void STL_em_deinit(STL_ERROR_T *err)
 void STL_em_get_last_failed(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_T *err)
 {
 #if STL_MULTICORE_EXECUTION
-	if (cpu < 0 || cpu > STL_NUM_CPU)
+	if (cpu > STL_NUM_CPU)
 	{
 		*err = STL_CPU_OUT_OF_BOUNDS;
 		return;
 	}
 	*vect = last_failed[cpu];
 #else
+	(void)cpu;	// Suppress unused variable warning if STL_MULTICORE_EXECUTION is not defined
 	*vect = last_failed;
 #endif /*STL_MULTICORE_EXECUTION*/
 *err = STL_ERROR_NONE;
@@ -246,6 +253,8 @@ STL_SIZE_T STL_em_runtime_failed(STL_CPUS cpu, STL_ERROR_T *err)
 		}
 	}
 #else
+	(void)cpu; // Suppress unused variable warning if STL_MULTICORE_EXECUTION is not defined
+
 	for (j = 0; j < STL_TOT_RT_ROUTINE; j++)
 	{
 		if (em_rt_sign[j].mismatch == STL_TRUE)
@@ -287,6 +296,8 @@ STL_SIZE_T STL_em_bootitme_failed(STL_CPUS cpu, STL_ERROR_T *err)
 		}
 	}
 #else
+	(void)cpu; // Suppress unused variable warning if STL_MULTICORE_EXECUTION is not defined
+
 	for (j = 0; j < STL_TOT_BT_ROUTINE; j++)
 	{
 		if (em_bt_sign[j].mismatch == STL_TRUE)
@@ -329,6 +340,8 @@ void STL_em_failed_runtime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_
 		}
 	}
 #else
+	(void)cpu; // Suppress unused variable warning if STL_MULTICORE_EXECUTION is not defined
+	
 	for (j = 0; j < STL_TOT_RT_ROUTINE; j++)
 	{
 		if (em_rt_sign[j].mismatch == STL_TRUE)
@@ -358,7 +371,6 @@ void STL_em_failed_runtime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_
  *       signatures for the specified CPU. In single-core mode, it processes
  *       the signatures for all routines.
  */
-}
 void STL_em_failed_bootime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_T *err)
 {
 	STL_SIZE_T j;
@@ -373,6 +385,8 @@ void STL_em_failed_bootime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_
 		}
 	}
 #else
+	(void) cpu; // Suppress unused variable warning if STL_MULTICORE_EXECUTION is not defined
+
 	for (j = 0; j < STL_TOT_BT_ROUTINE; j++)
 	{
 		if (em_bt_sign[j].mismatch == STL_TRUE)
@@ -407,26 +421,45 @@ void STL_em_failed_bootime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_
  */
 STL_SIGNATURE_T STL_em_rt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERROR_T *err)
 {
-#if STL_MULTICORE_EXECUTION
-	if (cpu < 0 || cpu >= STL_NUM_CPU)
+	STL_SIGNATURE_T tmp;
+#if (STL_MULTICORE_EXECUTION > 0u)
+	if (cpu >= STL_NUM_CPU)
 	{
 		*err = STL_CPU_OUT_OF_BOUNDS;
 		return 0;
 	}
 #endif /*STL_MULTICORE_EXECUTION*/
-	if (index < 0 || index >= STL_TOT_RT_ROUTINE)
+	(void )cpu; // Suppress unused variable warning if STL_MULTICORE_EXECUTION is not defined
+	
+	if (index >= STL_TOT_RT_ROUTINE)
 	{
 		*err = STL_INDEX_OUT_OF_BOUNDS;
 		return 0;
 	}
 	*err = STL_ERROR_NONE;
 
-#if STL_MULTICORE_EXECUTION
-	return em_rt[cpu][index].sig;
+#if (STL_MULTICORE_EXECUTION > 0u)
+	tmp = em_rt[cpu][index].sig;
 #else
-	return em_rt_sign[index].sig;
+	tmp = em_rt_sign[index].sig;
 #endif /*STL_MULTICORE_EXECUTION*/
+	return tmp;
 }
+
+/**
+ * @brief Updates the signature for a specific index and CPU.
+ *
+ * @param index The index of the signature to update.
+ * @param signature The new signature value.
+ * @param cpu The CPU identifier.
+ * @param err Pointer to the error structure to update.
+ * @return None
+ */
+void STL_em_update_sig(STL_SIZE_T index, STL_SIGNATURE_T signature, STL_CPUS cpu, STL_ERROR_T *err){
+	*err = STL_ERROR_NONE;
+	// TODO to implement 
+}
+    
 
 #endif /*STL_ERROR_MANAGEMENT_ENABLED*/
 

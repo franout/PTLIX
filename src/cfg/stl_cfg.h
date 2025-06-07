@@ -124,6 +124,9 @@
 
 /* CPU related*/
 #if (STL_MULTICORE_SOC > 0u)
+#define STL_MULTICORE_EXECUTION 1u
+#define STL_USE_MPU 0u /* Use the memory protection unit */
+#else
 #define STL_MULTICORE_EXECUTION 0u
 #define STL_USE_MPU 0u /* Use the memory protection unit */
 #endif				   /*STL_MULTICORE_SOC*/
@@ -150,8 +153,12 @@
 /****************                                                                     ****************/
 /*****************************************************************************************************/
 
+#ifndef STL_BOOT_TEST
 #define STL_BOOT_TEST 0u
+#endif /*STL_BOOT_TEST*/
+#ifndef STL_RUNTIME_TEST
 #define STL_RUNTIME_TEST 0u
+#endif /*STL_RUNTIME_TEST*/
 
 /*****************************************************************************************************/
 /*************************** Signature related defines ***********************************************/
@@ -163,11 +170,11 @@
 /*************************** Relocation related defines **********************************************/
 /*****************************************************************************************************/
 
-#define STL_RELOCATED 0u		// TODO verify relocation
+#define STL_RELOCATED 0u		 /* Relocation is enabled */
 #define STL_RELOCATION_TABLE 0u /* Relocation table for multiple relocations */
 
 /*****************************************************************************************************/
-/****************                    Error Management                                 ****************/
+/****************                  Error Management Module                            ****************/
 /****************                                                                     ****************/
 /*****************************************************************************************************/
 

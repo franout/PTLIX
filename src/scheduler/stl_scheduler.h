@@ -21,9 +21,8 @@
 #define __STL_SCHEDULER_H__
 
 #include "stl.h"
-
-#include "stl_al_os.h"
-#include "stl_core.h"
+#include "stl_cfg.h"
+#include "stl_types.h"
 #include "stl_tssp.h"
 
 #ifdef __cplusplus

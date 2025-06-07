@@ -1,4 +1,4 @@
-#if 1 __STL__
+#if __STL__
 #ifndef __STL_TSSP_H__
 #define __STL_TSSP_H__
 
@@ -284,35 +284,36 @@ extern "C"
 	void STL_TSSP_CSP_watchdog_reset(void);
 #endif /*STL_USE_WATCHDOG*/
 
+	/**
+	 * @brief Pointer type for test setup support package setup functions.
+	 * This type is used to define pointers to functions that set up test configurations
+	 * for the Test Setup Support Package (TSSP).
+	 * It is typically used in multicore systems where each CPU may have its own configuration.
+	 * @note This type is defined to facilitate the use of function pointers for test setup functions.
+	 * @see STL_TSSP_set_test_config_bootime, STL_TSSP_restore_test_config_bootime,
+	 *     STL_TSSP_set_test_config_runtime, STL_TSSP_restore_test_config_runtime
+	 * @warning Ensure that the function pointers are correctly assigned
+	 * before using them, as incorrect assignments may lead to undefined behavior.
+	 */
+	typedef void (*STL_TSSP_TEST_SETUP_PTR_T)(void);
+	
+		/**
+	 * @brief Pointer type for test setup support package restore functions.
+	 * This type is used to define pointers to functions that restore test configurations
+	 * for the Test Setup Support Package (TSSP).
+	 * It is typically used in multicore systems where each CPU may have its own configuration.
+	 * @note This type is defined to facilitate the use of function pointers for restoring test configurations.
+	 * @see STL_TSSP_set_test_config_bootime, STL_TSSP_restore_test_config_bootime,
+	 *     STL_TSSP_set_test_config_runtime, STL_TSSP_restore_test_config_runtime
+	 * @warning Ensure that the function pointers are correctly assigned
+	 * before using them, as incorrect assignments may lead to undefined behavior.
+	 */
+	typedef void (*STL_TSSP_TEST_RESTORE_PTR_T)(void);
+
 /**
  * Test configuration specific function
  */
 #if (STL_MULTICORE_SOC > 0u)
-    /**
-     * @brief Pointer type for test setup support package setup functions.
-     * This type is used to define pointers to functions that set up test configurations
-     * for the Test Setup Support Package (TSSP).
-     * It is typically used in multicore systems where each CPU may have its own configuration.
-     * @note This type is defined to facilitate the use of function pointers for test setup functions.
-     * @see STL_TSSP_set_test_config_bootime, STL_TSSP_restore_test_config_bootime,
-     *     STL_TSSP_set_test_config_runtime, STL_TSSP_restore_test_config_runtime
-     * @warning Ensure that the function pointers are correctly assigned
-     * before using them, as incorrect assignments may lead to undefined behavior.
-     */
-    typedef void (*STL_TSSP_TEST_SETUP_PTR_T)(void);
-
-    /**
-     * @brief Pointer type for test setup support package restore functions.
-     * This type is used to define pointers to functions that restore test configurations
-     * for the Test Setup Support Package (TSSP).
-     * It is typically used in multicore systems where each CPU may have its own configuration.
-     * @note This type is defined to facilitate the use of function pointers for restoring test configurations.
-     * @see STL_TSSP_set_test_config_bootime, STL_TSSP_restore_test_config_bootime,
-     *     STL_TSSP_set_test_config_runtime, STL_TSSP_restore_test_config_runtime
-     * @warning Ensure that the function pointers are correctly assigned
-     * before using them, as incorrect assignments may lead to undefined behavior. 
-     */
-    typedef void (*STL_TSSP_TEST_RESTORE_PTR_T)(void);
 
 	/** * @brief Set the test configuration at boot time for a specific CPU.
 	 * This function configures necessary parameters for a test before the test execution begins.

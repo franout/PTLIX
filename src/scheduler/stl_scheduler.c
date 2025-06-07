@@ -1,3 +1,5 @@
+#if __STL__
+
 /**
  * @file stl_scheduler.c
  * @brief Implementation of the STL (Self-Test Library) scheduler for boot-time and runtime tests.
@@ -47,15 +49,41 @@
  * @see stl_scheduler.h
  * @see stl_types.h
  */
-#if __STL__
+
 #ifndef __STL_SCHEDULER__MODULE__
 #define __STL_SCHEDULER__MODULE__
+
+#include "stl_sbst_cfg.h"
 #include "stl_scheduler.h"
 #include "stl_tssp.h"
 #include "stl_cfg.h"
 #include "stl_types.h"
 
-#if (STL_BOOT_TEST == 0u)
+
+#if (STL_BOOT_TEST > 0u)
+/**
+ * @brief Pointer to the boot test routines.
+ *
+ * This array contains pointers to the boot test routines.
+ * It is used to call the boot tests during the boot process.
+ * The array is indexed by the STL_TOT_BT_ROUTINE enum.
+ */
+EXTERN_KEYWORD STL_FUNCT_PTR_T SBST_BT[STL_TOT_BT_ROUTINE];
+#endif /* STL_BOOT_TEST */
+
+#if (STL_RUNTIME_TEST > 0u)
+/**
+ * @brief Pointer to the runtime test routines.
+ *
+ * This array contains pointers to the runtime test routines.
+ * It is used to call the runtime tests during the runtime process.
+ * The array is indexed by the STL_TOT_RT_ROUTINE enum.
+ */
+EXTERN_KEYWORD STL_FUNCT_PTR_T SBST_RT[STL_TOT_RT_ROUTINE];
+#endif /* STL_RUNTIME_TEST */
+
+
+#if (STL_BOOT_TEST > 0u)
 /**
  * @brief This function is used to schedule the bootime tests
  * It is called by the main function to execute the bootime tests, sequentially.
@@ -65,7 +93,7 @@
  * @param err Error code
  * @return None
  */
-STATIC_KEYWORD void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err)
+void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 {
 	STL_SIZE_T i;
 	STL_SIGNATURE_T signature;
@@ -128,6 +156,33 @@ STATIC_KEYWORD void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 	STL_TSSP_CPU_restore_ivor();
 #endif
 }
+
+/**
+ * @brief Sequential SBST scheduler for bootime tests
+ *
+ * This scheduler executes all bootime tests sequentially.
+ *
+ * @param err Error code
+ * @return None
+ */
+STATIC_KEYWORD void STL_scheduler_bootime_singlecore(STL_ERROR_T *err)
+{
+	STL_SIZE_T i;
+	STL_SIGNATURE_T signature;
+
+	for (i = 0; i < STL_TOT_BT_ROUTINE; i++)
+	{
+		signature = SBST_BT[i]();
+		STL_em_update_sig(i, signature, err);
+
+		if (*err != STL_ERROR_NONE)
+		{
+			return;
+		}
+	}
+}
+
+
 #endif /* STL_BOOT_TEST */
 /**
  * @brief This function is used to schedule the runtime tests
@@ -139,7 +194,7 @@ STATIC_KEYWORD void STL_scheduler_bootime(STL_CPUS cpu, STL_ERROR_T *err)
  *                       - 2 Custom (overwrite the definition)
  */
 
-#if (STL_RUNTIME_TEST == 0u)
+#if (STL_RUNTIME_TEST > 0u)
 
 #if (STL_SCHEDULER_TYPE == 0u)
 /**
@@ -219,7 +274,7 @@ WEAK_KEYWORD void STL_scheduler_runtime_singlecore(STL_ERROR_T *err)
 
 #endif /* STL_SCHEDULER_TYPE */
 
-#if (STL_MULTICORE_SOC == 1u)
+#if (STL_MULTICORE_SOC > 0u)
 #if (STL_SCHEDULER_TYPE == 0u)
 /**
  * @brief Sequential SBST scheduler for runtime tests (multicore)
@@ -328,7 +383,7 @@ WEAK_KEYWORD void STL_scheduler_runtime_multicore(STL_CPUS cpu, STL_ERROR_T *err
 }
 
 #endif /* STL_SCHEDULER_TYPE */
-
+#endif /* STL_MULTICORE_SOC */
 #endif /* STL_RUNTIME_TEST */
 /**
  * @brief This function schedules runtime tests.
@@ -347,13 +402,13 @@ void STL_schedule_runtime(STL_CPUS cpu, STL_ERROR_T *err)
 	// Initialize error code to no error
 	*err = STL_ERROR_NONE;
 
-#if STL_RUNTIME_TEST == 0
+#if (STL_RUNTIME_TEST > 0u)
 	// If runtime tests are disabled, set error and return
 	*err = STL_NO_RT_ROUTINE;
 	return;
 #else
 
-#if (STL_MULTICORE_SOC == 1u)
+#if (STL_MULTICORE_SOC > 0u)
 	// Multi-core configuration
 	if (cpu > STL_MULTICORE_SOC)
 	{
@@ -394,7 +449,7 @@ void STL_schedule_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 	return;
 #else
 
-#if (STL_MULTICORE_SOC == 1u)
+#if (STL_MULTICORE_SOC > 0u)
 	// Multi-core configuration
 	if (cpu > STL_MULTICORE_SOC)
 	{
@@ -407,11 +462,11 @@ void STL_schedule_bootime(STL_CPUS cpu, STL_ERROR_T *err)
 #else
 	// Single-core configuration
 	(void)cpu; // Suppress unused parameter warning
-	STL_scheduler_bootime(err);
+	STL_scheduler_bootime_singlecore(err);
 #endif /* STL_MULTICORE_SOC */
 
 #endif /* STL_BOOT_TEST */
 }
 
-#endif /*__STL_SCHEDULER_MODULE__*/
+#endif /*__STL_SCHEDULER__MODULE__*/
 #endif /*__STL__*/

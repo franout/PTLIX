@@ -2,18 +2,20 @@
 
 #include "stl_tssp.h"
 #include "stl_cfg.h"
+#include "stl_sbst_cfg.h"
 #include "stl_types.h"
+#include "stl_test_setup.h"
 
 #if STL_MULTICORE_EXECUTION
-static STL_TSSP_TEST_SETUP_PTR_T tssp_bt_setup[STL_NUM_CPU][STL_TOT_BT_ROUTINE] = {sbst_bt_setup_1, sbst_bt_setup_2};
-static STL_TSSP_TEST_RESTORE_PTR_T tssp_bt_restore[STL_NUM_CPU][STL_TOT_BT_ROUTINE] = {sbst_bt_restore_1, sbst_bt_restore_2};
-static STL_TSSP_TEST_SETUP_PTR_T tssp_rt_setup[STL_NUM_CPU][STL_TOT_RT_ROUTINE] = {} ;
-static STL_TSSP_TEST_RESTORE_PTR_T tssp_rt_restore[STL_NUM_CPU][STL_TOT_RT_ROUTINE] = {} ;
+STATIC_KEYWORD STL_TSSP_TEST_SETUP_PTR_T tssp_bt_setup[STL_NUM_CPU][STL_TOT_BT_ROUTINE] = {sbst_bt_setup_1, sbst_bt_setup_2};
+STATIC_KEYWORD STL_TSSP_TEST_RESTORE_PTR_T tssp_bt_restore[STL_NUM_CPU][STL_TOT_BT_ROUTINE] = {sbst_bt_restore_1, sbst_bt_restore_2};
+STATIC_KEYWORD STL_TSSP_TEST_SETUP_PTR_T tssp_rt_setup[STL_NUM_CPU][STL_TOT_RT_ROUTINE] = {} ;
+STATIC_KEYWORD STL_TSSP_TEST_RESTORE_PTR_T tssp_rt_restore[STL_NUM_CPU][STL_TOT_RT_ROUTINE] = {} ;
 #else
-static STL_TSSP_TEST_SETUP_PTR_T tssp_bt_setup[STL_TOT_BT_ROUTINE] = {sbst_bt_setup_1, sbst_bt_setup_2};
-static STL_TSSP_TEST_RESTORE_PTR_T tssp_bt_restore[STL_TOT_BT_ROUTINE] = {sbst_bt_restore_1, sbst_bt_restore_2};
-static STL_TSSP_TEST_SETUP_PTR_T tssp_rt_setup[STL_TOT_RT_ROUTINE] = {};
-static STL_TSSP_TEST_RESTORE_PTR_T tssp_rt_restore[STL_TOT_RT_ROUTINE] = {};
+STATIC_KEYWORD STL_TSSP_TEST_SETUP_PTR_T tssp_bt_setup[STL_TOT_BT_ROUTINE] = {sbst_bt_setup_1, sbst_bt_setup_2};
+STATIC_KEYWORD STL_TSSP_TEST_RESTORE_PTR_T tssp_bt_restore[STL_TOT_BT_ROUTINE] = {sbst_bt_restore_1, sbst_bt_restore_2};
+STATIC_KEYWORD STL_TSSP_TEST_SETUP_PTR_T tssp_rt_setup[STL_TOT_RT_ROUTINE] = {};
+STATIC_KEYWORD STL_TSSP_TEST_RESTORE_PTR_T tssp_rt_restore[STL_TOT_RT_ROUTINE] = {};
 #endif /*STL_MULTICORE_EXECUTION*/
 
 
@@ -31,7 +33,7 @@ static STL_TSSP_TEST_RESTORE_PTR_T tssp_rt_restore[STL_TOT_RT_ROUTINE] = {};
  * @param error Pointer to a variable to store error status.
  *
  */
-void STL_TSSP_set_test_config_bootime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_set_test_config_bootime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of boot time test configuration logic for a specific CPU
 	// This function is typically used to configure necessary parameters for a test
@@ -48,7 +50,7 @@ void STL_TSSP_set_test_config_bootime(STL_CPUS cpu, STL_SIZE_T test_number, STL_
  * @param test_number Identifier for the test configuration.
  * @param error Pointer to a variable to store error status.
  */
-void STL_TSSP_restore_test_config_bootime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_restore_test_config_bootime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of restoring boot time test configuration logic for a specific CPU
 	// This function is typically used to revert the boot time test configuration to its original state.
@@ -64,7 +66,7 @@ void STL_TSSP_restore_test_config_bootime(STL_CPUS cpu, STL_SIZE_T test_number, 
  * @param test_number Identifier for the specific test configuration.
  * @param error Pointer to a variable to store error status.
  */
-void STL_TSSP_set_test_config_runtime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_set_test_config_runtime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of runtime test configuration logic for a specific CPU
 	// This function is typically used to dynamically apply the test configuration parameters while the system is
@@ -82,7 +84,7 @@ void STL_TSSP_set_test_config_runtime(STL_CPUS cpu, STL_SIZE_T test_number, STL_
  * @note This function should be used with caution, as restoring the runtime test configuration
  * may lead to system instability if the system hangs or becomes unresponsive.
  */
-void STL_TSSP_restore_test_config_runtime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_restore_test_config_runtime(STL_CPUS cpu, STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of restoring runtime test configuration logic for a specific CPU
 	// This function is typically used to revert any runtime test configuration modifications for a specific CPU.
@@ -99,7 +101,7 @@ void STL_TSSP_restore_test_config_runtime(STL_CPUS cpu, STL_SIZE_T test_number, 
  * @param test_number Identifier for the specific test configuration.
  * @param error Pointer to a variable to store error status.
  */
-void STL_TSSP_set_test_config_bootime(STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_set_test_config_bootime(STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of boot time test configuration logic
 	// This function is typically used to configure necessary parameters for a test
@@ -117,7 +119,7 @@ void STL_TSSP_set_test_config_bootime(STL_SIZE_T test_number, STL_ERROR_T *)
  * @note This function should be used with caution, as restoring the boot time test configuration
  * may lead to system instability if the system hangs or becomes unresponsive.
  */
-void STL_TSSP_restore_test_config_bootime(STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_restore_test_config_bootime(STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of restoring boot time test configuration logic
 	// This function is typically used to revert the boot time test configuration to its original state.
@@ -132,7 +134,7 @@ void STL_TSSP_restore_test_config_bootime(STL_SIZE_T test_number, STL_ERROR_T *)
  * @param test_number Identifier for the specific test configuration.
  * @param error Pointer to a variable to store error status.
  */
-void STL_TSSP_set_test_config_runtime(STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_set_test_config_runtime(STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of runtime test configuration logic
 	// This function is typically used to dynamically apply the test configuration parameters while the system is
@@ -149,7 +151,7 @@ void STL_TSSP_set_test_config_runtime(STL_SIZE_T test_number, STL_ERROR_T *)
  * @note This function should be used with caution, as restoring the runtime test configuration
  * may lead to system instability if the system hangs or becomes unresponsive.
  */
-void STL_TSSP_restore_test_config_runtime(STL_SIZE_T test_number, STL_ERROR_T *)
+void STL_TSSP_restore_test_config_runtime(STL_SIZE_T test_number, STL_ERROR_T * err)
 {
 	// Implementation of restoring runtime test configuration logic
 	// This function is typically used to revert any runtime test configuration modifications.
