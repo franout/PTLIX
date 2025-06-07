@@ -108,7 +108,16 @@
  *
  * This type represents a pointer to a function that returns an STL_SIGNATURE_T value.
  */
-#include "typedefs.h"
+#if defined(__GNUC__)
+// GNU C Compiler specific definitions
+#include <stdint.h>
+#elif defined(__ICCARM__)
+// IAR C Compiler specific definitions
+#include <stdint.h>
+#elif defined(__CC_ARM)
+// ARM Compiler specific definitions
+#include <stdint.h>
+#endif
 
 // Boolean definitions
 #define STL_TRUE 1u
