@@ -28,7 +28,7 @@ If applicable, add screenshots to help explain your problem.
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
 
-**Micrccontroller (please complete the following information):**
+**Microcontroller (please complete the following information):**
  - Device: [e.g. STM32]
  - OS: [e.g. Zephyr]
  - Version [e.g. 22]
