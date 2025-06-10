@@ -9,7 +9,9 @@ project(
   'ptlix_lib',
   'c',
   version : '1.0.0',
-  default_options : ['warning_level=3']
+  default_options : ['warning_level=3'],
+  meson_version : '>=1.1.0',
+  license : 'Apache-2.0',
 )
 project_description = 'Portable Test Library Interface'
 
@@ -21,33 +23,31 @@ if target_machine.cpu_family() == 'x86_64'
   isa = 'x86_64'
 elif target_machine.cpu_family() == 'riscv64'
   isa = 'riscv64'
+elif target_machine.cpu_family() == 'riscv32'
+  isa = 'riscv32'
 else
   isa = 'unknown'
+  meson.error('Unsupported ISA: ' + target_machine.cpu_family())
 endif 
 
 # Check for the target architecture
-if target_machine.cpu_family() == 'x86_64'
+if target_machine.cpu() == 'x86_64'
   arch = 'x86_64'
-elif target_machine.cpu_family() == 'riscv64'
-  arch = 'riscv64'
-elif target_machine.cpu_family() == 'riscv32'
-  arch = 'riscv32'
-elif target_machine.cpu_family() == 'armv7'
-  arch = 'armv7'
-elif target_machine.cpu_family() == 'armv8'
-  arch = 'armv8'
-elif target_machine.cpu_family() == 'aarch64'
-  arch = 'aarch64'
-elif target_machine.cpu_family() == 'i386'
-  arch = 'i386'
-elif target_machine.cpu_family() == 'mips'
-  arch = 'mips'
+elif target_machine.cpu() == 'CV32E40P'
+  arch = 'cv32e40p'
+elif target_machine.cpu() == 'CV32E40X'
+  arch = 'cv32e40x'
+elif target_machine.cpu() == 'CV32E40S'
+  arch = 'cv32e40s'
+elif target_machine.cpu() == 'CV32E40X2'
+  arch = 'cv32e40x2'
 else
   arch = 'unknown'
-endif 
+  meson.error('Unsupported architecture: ' + target_machine.cpu_family())
+endif
 
 # Check for the target operating system
-if target_machine.system() == 'linux'
+if target_machine.system() == 'linux' or target_machine.system() == 'wsl'
   os = 'linux'
 elif target_machine.system() == 'windows'
   os = 'windows'
@@ -57,6 +57,7 @@ elif target_machine.system() == 'darwin'
   os = 'macos'
 else
   os = 'unknown'
+  meson.error('Unsupported operating system: ' + target_machine.system())
 endif 
 
 
@@ -81,7 +82,8 @@ include_dirs = [
   'src/tests/' + compiler.get_id().to_upper() + '/' + isa,
 ]
 
-## TODO make test variable dependent
+## TODO make test-type (cpu,uncore etc) variable dependent
+## TODO add meson.build as subproject of sbst
 
 project_source_files = [
     'src/error_management/stl_error_management.c',
@@ -93,28 +95,99 @@ project_source_files = [
     'src/TSSP/CSP/template/stl_al_csp.c',
     'src/TSSP/OS/template/stl_al_os.c',
     'src/TSSP/stl_tssp.c',
-    'tests/main_rt.c',
 ]
 
-project_test_files = [
-  # 'tests/src/tests.cpp',
-]
+linker_script = 'linker_scripts/' + compiler.get_id().to_upper() + '/' + arch + '/linker.ld'
+
 
 build_args = [
   '-D__STL__',
+  '-T ' + linker_script,
   '-DPTLIX_BUILD',
-  '-DSTL_BOOT_TEST',  
-  '-DSTL_RUNTIME_TEST',
 ]
 
+if get_option('runtime_tests') == true
+  build_args += '-DSTL_RUNTIME_TEST'
+endif
+
+if get_option('boot_tests') == true
+  build_args += '-DSTL_BOOT_TEST'
+endif
 
 
-## TODO add the generation of doxygen makefile 
-## TODO handle the linker script
-## TODO GET THE HEADER FOR THE RELOCATION 
-# Add custom defines for the build
-#
+if get_option('runtime_tests_relocation') == true
+  build_args += '-STL_RELOCATED' 
+endif 
+
+if get_option('runtime_tests_relocation_table') == true
+  build_args += '-DSTL_RELOCATION_TABLE'
+endif 
+
+## Get the relocation file 
+relocation_header = 'src/tests/' + compiler.get_id().to_upper() + '/' + isa + '/relocation'
+
+include_dirs += relocation_header
+
 # ===================================================================
+
+# ======
+# Library 
+# ======
+
+# Only make public interfaces visible
+if target_machine.system() == 'windows' or target_machine.system() == 'cygwin'
+ build_args += '-DSTLLIB_PUBLIC="__declspec(dllexport)"'
+else
+ build_args += '-DSTLLIB_PUBLIC=__attribute__((visibility("default")))'
+endif
+
+if get_option('library_type') == 'shared'
+  message('Building shared library')
+  project_target = shared_library(
+    meson.project_name(),
+    project_source_files,
+    install : false,
+    c_args : build_args,
+    include_directories : include_dirs,
+    gnu_symbol_visibility : 'hidden',
+  )
+else
+  message('Building static library')
+  project_target = static_library(
+    meson.project_name(),
+    project_source_files,
+    install : false,
+    c_args : build_args,
+  )
+endif
+
+
+# ==========
+# TODO Unit Tests
+# ==========
+if get_option('build_tests')
+message('Building unit tests')
+if not meson.is_subproject()
+  project_test_files = [
+    'tests/main_rt.c',
+    'tests/main_boot.c',
+    #'tests/test_scheduler.c',
+    #'tests/test_error_management.c',
+    #'tests/test_stl.c',
+    #'tests/test_stl_cfg.c',
+    #'tests/test_stl_tssp.c',
+  ]
+ subdir('tests')
+
+test('all_tests',
+  executable(
+    'run_tests',
+    files(project_test_files),
+    install : false,
+    link_with : project_target
+  )
+)
+endif 
 
 # =======
 # Executables
@@ -136,46 +209,19 @@ project_target = executable(
   c_args : build_args + build_args_lib ,
 )
 
-
-
-# ======
-# TODO Library 
-# ======
-
-#public_headers = include_directories('include')
-
-# Only make public interfaces visible
-#if target_machine.system() == 'windows' or target_machine.system() == 'cygwin'
-#  build_args += '-DSTLLIB_PUBLIC="__declspec(dllexport)"'
-#else
-#  build_args += '-DSTLLIB_PUBLIC=__attribute__((visibility("default")))'
-#endif
-#
-#project_target = shared_library(
-#  meson.project_name(),
-#  project_source_files,
-#  install : false,
-#  c_args : build_args,
-#  gnu_symbol_visibility : 'hidden',
-#  #include_directories : public_headers,
-#)
+endif # get_option('build_tests')
 
 
 # ==========
-# Unit Tests
+# Doxygen-based Documentation
 # ==========
-
-#if not meson.is_subproject()
-#  add_languages('cpp')
-#  subdir('tests')
-#
-#  test('all_tests',
-#    executable(
-#      'run_tests',
-#      files(project_test_files),
-#      dependencies : [project_dep, test_dep],
-#      install : false
-#    )
-#  )
-#endif
-#
+if get_option('build_docs')==true 
+  message('Building documentation')
+  doxygen = find_program('doxygen', required : false)
+  if doxygen.found()
+    run_target('docs', command : [doxygen, meson.project_source_root() + '/Doxyfile'])
+    message('Documentation generated successfully in ' + meson.current_build_dir() + '/docs/.')
+  else
+    warning('Doxygen not found, documentation will not be generated.')
+  endif
+endif # get_option('build_docs') 
