@@ -1,32 +1,3 @@
-# Project name
-PROJECT_NAME = PTLIX
-
-# Input directory (where your C files are located)
-INPUT = .
-RECURSIVE = YES
-GENERATE_TREEVIEW = YES
-
-# Output directory (where the documentation will be generated)
-OUTPUT_DIRECTORY = docs
-
-JAVADOC_AUTOBRIEF = YES
-EXTRACT_ALL = YES
-GENERATE_HTML = YES
-GENERATE_LATEX = YES
-GENERATE_MAN  = YES
-GENERATE_RTF = YES
-GENERATE_XML = YES
-GENERATE_DOCBOOK  = YES
-
-# Brief description of the project
-BRIEF = "Documentation for the Portable Test Library Interface (PTLIX)"
-
-# Version of the project
-PROJECT_VERSION = 1.0.0
-
-
-# Doxyfile 1.9.2
-
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
@@ -35,7 +6,7 @@ PROJECT_NAME           = "PTLIX"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          =
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = .
+OUTPUT_DIRECTORY       = docs/
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = NO
 OUTPUT_LANGUAGE        = English
