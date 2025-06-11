@@ -439,7 +439,7 @@ STL_SIGNATURE_T STL_em_rt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERRO
 	*err = STL_ERROR_NONE;
 
 #if (STL_MULTICORE_EXECUTION > 0u)
-	tmp = em_rt[cpu][index].sig;
+	tmp = em_rt_sign[cpu][index].sig;
 #else
 	tmp = em_rt_sign[index].sig;
 #endif /*STL_MULTICORE_EXECUTION*/
