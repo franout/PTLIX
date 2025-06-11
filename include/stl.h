@@ -78,7 +78,7 @@ typedef struct
  * @ingroup STL_API
  * @see STL_deinit
  */
-void STL_init(STL_ERROR_T *err);
+STLLIB_PUBLIC void STL_init(STL_ERROR_T *err);
 /**
  * @brief Deinitializes the STL.
  * This function deinitializes the Software Test Library (STL) by cleaning up resources and error management.
@@ -93,7 +93,7 @@ void STL_init(STL_ERROR_T *err);
  * @note This function should be called after all STL tests have been executed and before the program terminates.
  * It ensures that all resources are properly released and the STL is in a clean state for future use.
  */
-void STL_deinit(STL_ERROR_T *err);
+STLLIB_PUBLIC void STL_deinit(STL_ERROR_T *err);
 
 /**
  * @brief Schedules runtime tests for a specific CPU.
@@ -105,7 +105,7 @@ void STL_deinit(STL_ERROR_T *err);
  * @note This function is part of the STL runtime testing framework.
  * It is used to schedule tests that are executed during the runtime of the system.
  */
-void STL_schedule_runtime(STL_CPUS cpu, STL_ERROR_T *err);
+STLLIB_PUBLIC void STL_schedule_runtime(STL_CPUS cpu, STL_ERROR_T *err);
 /**
  * @brief Schedules boot-time tests for a specific CPU.
  * This function schedules the boot-time tests for the specified CPU.
@@ -117,7 +117,7 @@ void STL_schedule_runtime(STL_CPUS cpu, STL_ERROR_T *err);
  * It is used to schedule tests that are executed during the boot process of the system.
  * It is typically called during the system initialization phase.
  */
-void STL_schedule_bootime(STL_CPUS cpu, STL_ERROR_T *err);
+STLLIB_PUBLIC void STL_schedule_bootime(STL_CPUS cpu, STL_ERROR_T *err);
 
 #if STL_RELOCATED
 /**
@@ -130,7 +130,7 @@ void STL_schedule_bootime(STL_CPUS cpu, STL_ERROR_T *err);
  * It is used to adjust the memory addresses of the runtime tests after relocation.
  * @see STL_init
  */
-void STL_relocate_runtime_tests(STL_ERROR_T *err);
+STLLIB_PUBLIC void STL_relocate_runtime_tests(STL_ERROR_T *err);
 #endif /*__STL_RELOCATED__*/
 
 #if STL_OS_PRESENT
@@ -143,7 +143,7 @@ void STL_relocate_runtime_tests(STL_ERROR_T *err);
  * @note This function is part of the STL OS integration.
  * It is used to create a task that will execute the runtime tests in an operating system environment.
  */
-void STL_runtime_OS_task_create(STL_ERROR_T *err);
+STLLIB_PUBLIC void STL_runtime_OS_task_create(STL_ERROR_T *err);
 
 /**
  * @brief Deletes the OS task for the STL runtime tests.
@@ -155,7 +155,7 @@ void STL_runtime_OS_task_create(STL_ERROR_T *err);
  * It is used to remove the task that was created for executing the runtime tests in an operating system environment.
  * It should be called when the tests are complete or when the system is shutting down.
  */
-void STL_runtime_OS_task_delete(STL_ERROR_T *err);
+STLLIB_PUBLIC void STL_runtime_OS_task_delete(STL_ERROR_T *err);
 #endif /*__STL_IN_OS__*/
 
 #if STL_ERROR_MANAGEMENT_ENABLED
@@ -166,14 +166,14 @@ void STL_runtime_OS_task_delete(STL_ERROR_T *err);
  *
  * @param err Pointer to the error structure to initialize.
  */
-EXTERN_KEYWORD void STL_em_init(STL_ERROR_T *err);
+STLLIB_PUBLIC EXTERN_KEYWORD void STL_em_init(STL_ERROR_T *err);
 
 /**
  * @brief Deinitializes the error management system.
  *
  * @param err Pointer to the error structure to initialize.
  */
-EXTERN_KEYWORD void STL_em_deinit(STL_ERROR_T *err);
+STLLIB_PUBLIC EXTERN_KEYWORD void STL_em_deinit(STL_ERROR_T *err);
 /**
  * @brief Handles a runtime failure for a specific CPU.
  *
@@ -181,7 +181,7 @@ EXTERN_KEYWORD void STL_em_deinit(STL_ERROR_T *err);
  * @param err Pointer to the error structure to update.
  * @return The size of the runtime failure data.
  */
-EXTERN_KEYWORD STL_SIZE_T STL_em_runtime_failed(STL_CPUS cpu, STL_ERROR_T *err);
+STLLIB_PUBLIC EXTERN_KEYWORD STL_SIZE_T STL_em_runtime_failed(STL_CPUS cpu, STL_ERROR_T *err);
 
 /**
  * @brief Handles all runtime failures for a specific CPU.
@@ -190,7 +190,7 @@ EXTERN_KEYWORD STL_SIZE_T STL_em_runtime_failed(STL_CPUS cpu, STL_ERROR_T *err);
  * @param vect Pointer to the vector of failed tests.
  * @param err Pointer to the error structure to update.
  */
-EXTERN_KEYWORD void STL_em_failed_runtime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_T *err);
+STLLIB_PUBLIC EXTERN_KEYWORD void STL_em_failed_runtime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_T *err);
 
 /**
  * @brief Handles all boot-time failures for a specific CPU.
@@ -199,7 +199,7 @@ EXTERN_KEYWORD void STL_em_failed_runtime_all(STL_CPUS cpu, STL_FAILED_TEST_T *v
  * @param vect Pointer to the vector of failed tests.
  * @param err Pointer to the error structure to update.
  */
-EXTERN_KEYWORD void STL_em_failed_bootime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_T *err);
+STLLIB_PUBLIC EXTERN_KEYWORD void STL_em_failed_bootime_all(STL_CPUS cpu, STL_FAILED_TEST_T *vect, STL_ERROR_T *err);
 
 /**
  * @brief Retrieves the boot-time signature for a specific CPU and index.
@@ -209,7 +209,7 @@ EXTERN_KEYWORD void STL_em_failed_bootime_all(STL_CPUS cpu, STL_FAILED_TEST_T *v
  * @param err Pointer to the error structure to update.
  * @return The boot-time signature.
  */
-EXTERN_KEYWORD STL_SIGNATURE_T STL_em_bt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERROR_T *err);
+STLLIB_PUBLIC EXTERN_KEYWORD STL_SIGNATURE_T STL_em_bt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERROR_T *err);
 
 /**
  * @brief Retrieves the runtime signature for a specific CPU and index.
@@ -219,7 +219,7 @@ EXTERN_KEYWORD STL_SIGNATURE_T STL_em_bt_get_signature(STL_CPUS cpu, STL_SIZE_T 
  * @param err Pointer to the error structure to update.
  * @return The runtime signature.
  */
-EXTERN_KEYWORD STL_SIGNATURE_T STL_em_rt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERROR_T *err);
+STLLIB_PUBLIC EXTERN_KEYWORD STL_SIGNATURE_T STL_em_rt_get_signature(STL_CPUS cpu, STL_SIZE_T index, STL_ERROR_T *err);
 
 #endif /*STL_ERROR_MANAGEMENT_ENABLED*/
 

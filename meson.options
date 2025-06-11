@@ -1,0 +1,7 @@
+option('library_type', description : 'Build shared or static library (shared/static)', type : 'string', value : 'shared')
+option('build_tests', description : 'Build unit tests', type : 'boolean', value : false)
+option('build_docs', description : 'Build documentation', type : 'boolean', value : true)
+option('runtime_tests', description : 'Compile sbsts runtime', type : 'boolean', value : true)
+option('boot_tests', description : 'Compile sbsts boot', type : 'boolean', value : false)
+option('runtime_tests_relocation' , description : 'Compile sbsts runtime with relocation', type : 'boolean', value : false)
+option('runtime_tests_relocation_table' , description : 'Compile sbsts runtime with relocation custom defined table', type : 'boolean', value : false)
