@@ -402,7 +402,7 @@ void STL_schedule_runtime(STL_CPUS cpu, STL_ERROR_T *err)
 	// Initialize error code to no error
 	*err = STL_ERROR_NONE;
 
-#if (STL_RUNTIME_TEST > 0u)
+#if (STL_RUNTIME_TEST == 0u)
 	// If runtime tests are disabled, set error and return
 	*err = STL_NO_RT_ROUTINE;
 	return;
