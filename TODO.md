@@ -1,7 +1,7 @@
 TODO:
 - [x] add compilation
 - [ ] add tests
-- [ ] add examples and readme
+- [x] add examples and readme
 - [x] add doc
 
 RoadMap:
